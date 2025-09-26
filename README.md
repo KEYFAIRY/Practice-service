@@ -1,1 +1,93 @@
-# Practice service
+# Practice-Service
+Practice service
+
+## Requirements
+
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) or Docker Engine (Linux).
+* `.env` file with environment variables.
+* Deployed API Gateway MongoDB, and MySQL.
+
+##  Project structure 📁
+
+```bash
+📁 PRACTICE-SERVICE/              # Root directory of the worker service
+│
+├── 📁 app/                             # Main application code
+│   ├── main.py                         # Entry point: starts FastAPI app
+│   │
+│   ├── 📁 core/                        # Core configurations
+│   │   ├── config.py                   # Environment variables
+│   │   ├── logging.py                  # Logging configuration
+│   │   └── exceptions.py               # Custom exception definitions
+│   │
+│   ├── 📁 domain/                      # Business logic (independent of tech)
+│   │   ├── 📁 entities/                # Core entities
+│   │   ├── 📁 repositories/            # Repository interfaces
+│   │   └── 📁 services/                # Domain service
+│   │
+│   ├── 📁 application/                 # Application layer (use case orchestration)
+│   │   ├── 📁 use_cases/               # Use cases
+│   │   └── 📁 dto/                     # Data Transfer Objects
+│   │
+│   ├── 📁 infrastructure/              # Technical implementations
+│   │   ├── 📁 database/                # Database adapters
+│   │   │   └── 📁 models/              # Database models
+│   │   └── 📁 repositories/            # Concrete repository implementations
+│   │
+│   ├── 📁 presentation/               # Presentation layer (API and external interfaces)
+│   │   ├── 📁 api/                    # REST API endpoints
+│   │   │   └── 📁 v1/                 # API v1 endpoints
+│   │   │       └── dependencies.py    # Shared dependencies (DI)
+│   │   ├── 📁 schemas/                # Pydantic schemas
+│   │   └── 📁 middleware/             # Custom middleware (CORS, logging, error handling)
+│   │
+│   └── 📁 shared/                      # Shared utilities
+│       ├── constants.py                # Global constants
+│       ├── enums.py                    # Enumerations
+│       └── utils.py                    # Helper functions
+│
+├── 📁 tests/                           # Unit tests
+│   ├── 📁 domain/
+│   ├── 📁 application/
+│   └── 📁 infrastructure/
+│
+├── 📁 scripts/                         # Helper scripts
+│   └── start.sh                        # Script to start the service
+│
+├── .env                                # Environment variables (not committed to Git)
+├── Dockerfile                          # Instructions to build Docker image
+├── docker-compose.yml                  # Runs only this service container
+├── requirements.txt                    # Python dependencies
+└── README.md                           # Project documentation
+
+```
+
+## Steps to run the project
+
+### Create .env file, for example:
+
+Edit the .example.env file with actual variables, and rename it to .env
+
+
+### Run the service
+
+```bash
+docker compose up --build -d
+```
+
+### Check running containers in Docker Desktop / Docker Engine
+
+```bash
+docker ps
+```
+
+### Test the service
+
+Endpoints are accesible [Here](http://localhost:8130).
+
+
+### Stop the service
+
+```bash
+docker compose down
+```
