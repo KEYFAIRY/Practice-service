@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, status, Query
 from typing import List
 from datetime import date
 
+from app.application.use_cases.get_user_practices_use_case import GetUserPracticesUseCase
+from app.presentation.api.v1.dependencies import get_user_practices_use_case_dependency
 from app.presentation.schemas.common_schema import StandardResponse
 from app.presentation.schemas.practice_schema import PracticeItem, PracticeResponse
 
@@ -20,25 +22,26 @@ router = APIRouter(prefix="/practice", tags=["Practices"])
 )
 async def get_user_practices(
     uid: str,
-    start_date: date = Query(..., description="Start date (inclusive)"),
-    end_date: date = Query(..., description="End date (inclusive)"),
+    last_id: int = Query(None, description="ID of the last practice from previous page for pagination"),
     use_case: GetUserPracticesUseCase = Depends(get_user_practices_use_case_dependency)
 ):
     """Endpoint that retrieves practices for a user within a given date range."""
 
-    logger.info(f"Retrieving practices for user {uid} from {start_date} to {end_date}")
+    logger.info(f"Retrieving practices for user {uid} with last_id={last_id}")
 
-    practices_dto: List = await use_case.execute(uid=uid, start_date=start_date, end_date=end_date)
+    practices_dto: List = await use_case.execute(uid=uid, last_id=last_id)
 
     # DTOs → PracticeItem
     items = [
         PracticeItem(
             practice_id=p.id,
-            scale=p.scale_name,
+            scale=p.scale,
             scale_type=p.scale_type,
             date=p.date,
             time=p.time,
-            state=p.state
+            state=p.state,
+            local_video_url=p.local_video_url,
+            pdf_url=p.pdf_url,
         )
         for p in practices_dto
     ]

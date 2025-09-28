@@ -1,0 +1,44 @@
+import logging
+
+from app.core.exceptions import UserNotFoundException
+from app.domain.entities.practice_metadata import PracticeMetadata
+from app.domain.repositories.metadata_repo import IMetaDataRepository
+from app.infrastructure.database.mongo_connection import mongo_connection
+
+logger = logging.getLogger(__name__)
+
+
+class MongoMetadataRepository(IMetaDataRepository):
+    """Concrete implementation of MetadataRepository using Motor (async MongoDB driver)."""
+
+    async def get_practice_metadata(self, uid: str, practice_id: int) -> PracticeMetadata:
+        try:
+            db = mongo_connection.connect()
+
+            # Get user document by uid
+            user_doc = await db["users"].find_one({"uid": uid})
+            if not user_doc:
+                logger.warning(f"User with uid={uid} not found")
+                raise  UserNotFoundException(f"User with uid={uid} not found")
+
+            # Get practice metadata by practice_id
+            for pr in user_doc.get("practices", []):
+                if pr.get("id_practice") == practice_id:
+                    logger.info(f"Found practice metadata for uid={uid}, practice_id={practice_id}")
+                    return PracticeMetadata(
+                        id_practice=practice_id,
+                        video_in_local=pr.get("video_in_local"),
+                        report=pr.get("report"),
+                        video_done=pr.get("video_done", False),
+                        audio_done=pr.get("audio_done", False)
+                    )
+
+            logger.warning(f"No practice found with id={practice_id} for uid={uid}")
+            raise  UserNotFoundException(f"User with uid={uid} not found")
+
+        except Exception as e:
+            logger.error(
+                f"Error fetching practice metadata for uid={uid}, practice_id={practice_id}: {e}",
+                exc_info=True
+            )
+            raise

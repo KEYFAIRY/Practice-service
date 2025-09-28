@@ -23,6 +23,7 @@ from app.presentation.middleware.exception_handler import (
     request_validation_exception_handler,
     general_exception_handler,
 )
+from app.presentation.api.v1.practice import router as get_practices
 
 
 # Configure logging
@@ -93,7 +94,7 @@ def create_application() -> FastAPI:
         }
 
     # Routers
-    # app.include_router(receive_video)
+    app.include_router(get_practices)
 
     return app
 

@@ -9,6 +9,8 @@ class PracticeItem(BaseModel):
     date: str = Field(..., description="Date of the practice", example="2023-10-01")
     time: str = Field(..., description="Time of the practice", example="15:30:00")
     state: str = Field(..., description="Status of the practice", example="completed")
+    local_video_url: str = Field(None, description="URL to the local video of the practice", example="http://example.com/video.mp4")
+    pdf_url: str = Field(None, description="URL to the PDF of the practice", example="http://example.com/sheet.pdf")
     
 class PracticeResponse(BaseModel):
     """Response with information about a registered practice"""

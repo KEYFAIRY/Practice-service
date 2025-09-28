@@ -17,3 +17,9 @@ class ResponseCode(str, Enum):
     # 5xx Server error codes
     INTERNAL_SERVER_ERROR = "500"
     SERVICE_UNAVAILABLE = "503"
+    
+class PracticeState(str, Enum):
+    COMPLETED = "COMPLETED" # Audio/video analysis and report done
+    ANALYZED = "ANALYZED" # Audio/video analysis done, report pending
+    IN_PROGRESS = "IN_PROGRESS" # Audio/video analysis or report in progress
+    FINISHED = "FINISHED" # Audio/video analysis and report done and user deleted video in local
