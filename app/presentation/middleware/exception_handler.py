@@ -3,6 +3,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from app.core.exceptions import (
     PracticeNotFoundException,
+    ReportNotFoundException,
     PracticeServiceException,
     UserNotFoundException,
     DatabaseConnectionException,
@@ -13,30 +14,39 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def build_response(exc: PracticeServiceException) -> dict:
+    logger.error(str(exc))
+
+    return StandardResponse(
+        code=str(exc.code),
+        message=exc.message,
+        data=exc.details or None
+    ).dict()
+
+
 async def practice_service_exception_handler(request: Request, exc: PracticeServiceException):
-    logger.error(f"PracticeServiceException: {exc.message} - Code: {exc.code}")
-    response = StandardResponse.error(message=exc.message, code=exc.code)
-    return JSONResponse(status_code=int(exc.code), content=response.dict())
+    logger.error(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def user_not_found_exception_handler(request: Request, exc: UserNotFoundException):
-    logger.warning(f"User not found: {exc.message}")
-    response = StandardResponse.not_found(exc.message)
-    return JSONResponse(status_code=int(exc.code), content=response.dict())
+    logger.warning(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def practice_not_found_exception_handler(request: Request, exc: PracticeNotFoundException):
-    logger.warning(f"Practice not found: {exc.message}")
-    response = StandardResponse.not_found(exc.message)
-    return JSONResponse(status_code=int(exc.code), content=response.dict())
+    logger.warning(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
+
+async def report_not_found_exception_handler(request: Request, exc: ReportNotFoundException):
+    logger.warning(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def database_connection_exception_handler(request: Request, exc: DatabaseConnectionException):
-    logger.error(f"Database connection error: {exc.message}")
-    response = StandardResponse.internal_error(exc.message)
-    return JSONResponse(status_code=int(exc.code), content=response.dict())
+    logger.error(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def validation_exception_handler(request: Request, exc: ValidationException):
-    logger.warning(f"Validation error: {exc.message}")
-    response = StandardResponse.validation_error(exc.message)
-    return JSONResponse(status_code=int(exc.code), content=response.dict())
+    logger.warning(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def request_validation_exception_handler(request: Request, exc: RequestValidationError):
     logger.warning(f"Request validation error: {exc.errors()}")

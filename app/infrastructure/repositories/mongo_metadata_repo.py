@@ -1,6 +1,6 @@
 import logging
 
-from app.core.exceptions import UserNotFoundException
+from app.core.exceptions import PracticeNotFoundException, UserNotFoundException
 from app.domain.entities.practice_metadata import PracticeMetadata
 from app.domain.repositories.metadata_repo import IMetaDataRepository
 from app.infrastructure.database.mongo_connection import mongo_connection
@@ -19,7 +19,7 @@ class MongoMetadataRepository(IMetaDataRepository):
             user_doc = await db["users"].find_one({"uid": uid})
             if not user_doc:
                 logger.warning(f"User with uid={uid} not found")
-                raise  UserNotFoundException(f"User with uid={uid} not found")
+                raise UserNotFoundException(user_id=uid)
 
             # Get practice metadata by practice_id
             for pr in user_doc.get("practices", []):
@@ -34,8 +34,10 @@ class MongoMetadataRepository(IMetaDataRepository):
                     )
 
             logger.warning(f"No practice found with id={practice_id} for uid={uid}")
-            raise  UserNotFoundException(f"User with uid={uid} not found")
+            raise PracticeNotFoundException(practice_id=practice_id)
 
+        except (UserNotFoundException, PracticeNotFoundException):
+            raise
         except Exception as e:
             logger.error(
                 f"Error fetching practice metadata for uid={uid}, practice_id={practice_id}: {e}",

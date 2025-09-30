@@ -25,9 +25,9 @@ services:
       MONGO_DB: ${MONGO_DB}
 
       # Storage
-      CONTAINER_VIDEO_PATH: ${CONTAINER_VIDEO_PATH}
+      CONTAINER_REPORT_PATH: ${CONTAINER_REPORT_PATH}
     volumes:
-      - ${HOST_VIDEO_PATH}:${CONTAINER_VIDEO_PATH}
+      - ${HOST_VIDEO_PATH}:${CONTAINER_REPORT_PATH}
     restart: unless-stopped
     networks:
       - app-network

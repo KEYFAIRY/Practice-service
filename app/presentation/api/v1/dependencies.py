@@ -1,8 +1,11 @@
 from functools import lru_cache
 
+from app.application.use_cases.get_report_use_case import GetReportUseCase
 from app.application.use_cases.get_user_practices_use_case import GetUserPracticesUseCase
 from app.domain.services.practice_metadata_service import PracticeMetadataService
 from app.domain.services.practice_service import PracticeService
+from app.domain.services.report_service import ReportService
+from app.infrastructure.repositories.local_report_repo import LocalReportRepository
 from app.infrastructure.repositories.mongo_metadata_repo import MongoMetadataRepository
 from app.infrastructure.repositories.mysql_practice_repo import MySQLPracticeRepository
 
@@ -18,6 +21,11 @@ def get_mongo_metadata_repository() -> MongoMetadataRepository:
     """Get instance of MongoMetadataRepository."""
     return MongoMetadataRepository()
 
+@lru_cache
+def get_local_report_repository() -> LocalReportRepository:
+    """Get instance of LocalReportRepository."""
+    return LocalReportRepository()
+
 # Services
 @lru_cache()
 def get_practice_service() -> PracticeService:
@@ -29,6 +37,12 @@ def get_practice_metadata_service() -> PracticeMetadataService:
     """Get instance of PracticeMetadataService."""
     return PracticeMetadataService(metadata_repository=get_mongo_metadata_repository())
 
+@lru_cache()
+def get_report_service() -> ReportService:
+    """Get instance of ReportService."""
+    return ReportService(report_repository=get_local_report_repository())
+
+
 # Use Cases
 @lru_cache()
 def get_practices_for_user_use_case() -> GetUserPracticesUseCase:
@@ -38,7 +52,16 @@ def get_practices_for_user_use_case() -> GetUserPracticesUseCase:
         practice_metadata_service=get_practice_metadata_service()
     )
     
+@lru_cache()
+def get_report_use_case() -> GetReportUseCase:
+    """Get instance of GetReportUseCase."""
+    return GetReportUseCase(report_service=get_report_service())
+    
 # FastAPI Dependencies
 def get_user_practices_use_case_dependency() -> GetUserPracticesUseCase:
     """Dependency for injecting GetUserPracticesUseCase."""
     return get_practices_for_user_use_case()
+
+def get_report_use_case_dependency() -> GetReportUseCase:
+    """Dependency for injecting GetReportUseCase."""
+    return get_report_use_case()

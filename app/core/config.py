@@ -52,7 +52,7 @@ class Settings(BaseSettings):
 
     # Storage
     HOST_VIDEO_PATH: str
-    CONTAINER_VIDEO_PATH: str
+    CONTAINER_REPORT_PATH: str
 
     # Logging
     LOG_LEVEL: str = "INFO"
