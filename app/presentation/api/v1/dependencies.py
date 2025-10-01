@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from app.application.use_cases.finish_practice_use_case import FinishPracticeUseCase
 from app.application.use_cases.get_musical_errors_use_case import GetMusicalErrorsUseCase
 from app.application.use_cases.get_postural_errors_use_case import GetPosturalErrorsUseCase
 from app.application.use_cases.get_report_use_case import GetReportUseCase
@@ -68,6 +69,11 @@ def get_musical_error_service() -> MusicalErrorService:
     """Get instance of MusicalErrorService."""
     return MusicalErrorService(musical_error_repo=get_musical_error_repository())
 
+@lru_cache()
+def get_practice_metadata_service() -> PracticeMetadataService:
+    """Get instance of PracticeMetadataService."""
+    return PracticeMetadataService(metadata_repository=get_mongo_metadata_repository())
+
 
 # Use Cases
 @lru_cache()
@@ -92,6 +98,11 @@ def get_postural_errors_use_case() -> GetPosturalErrorsUseCase:
 def get_musical_errors_use_case() -> GetMusicalErrorsUseCase:
     """Get instance of GetMusicalErrorsUseCase."""
     return GetMusicalErrorsUseCase(musical_error_service=get_musical_error_service())
+
+@lru_cache()
+def get_finish_practice_use_case() -> FinishPracticeUseCase:
+    """Get instance of FinishPracticeUseCase."""
+    return FinishPracticeUseCase(practice_metadata_service=get_practice_metadata_service())
     
 # FastAPI Dependencies
 def get_user_practices_use_case_dependency() -> GetUserPracticesUseCase:
@@ -109,3 +120,7 @@ def get_postural_errors_use_case_dependency() -> GetPosturalErrorsUseCase:
 def get_musical_errors_use_case_dependency() -> GetMusicalErrorsUseCase:
     """Dependency for injecting GetMusicalErrorsUseCase."""
     return get_musical_errors_use_case()
+
+def get_finish_practice_use_case_dependency() -> FinishPracticeUseCase:
+    """Dependency for injecting FinishPracticeUseCase."""
+    return get_finish_practice_use_case()

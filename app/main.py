@@ -31,6 +31,7 @@ from app.presentation.api.v1.practice import router as get_practices
 from app.presentation.api.v1.report import router as get_report
 from app.presentation.api.v1.postural_error import router as get_postural_errors
 from app.presentation.api.v1.musical_error import router as get_musical_errors
+from app.presentation.api.v1.practice_metadata import router as finish_practice
 
 
 # Configure logging
@@ -107,6 +108,7 @@ def create_application() -> FastAPI:
     app.include_router(get_report)
     app.include_router(get_postural_errors)
     app.include_router(get_musical_errors)
+    app.include_router(finish_practice)
 
     return app
 

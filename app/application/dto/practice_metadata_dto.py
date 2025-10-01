@@ -1,3 +1,6 @@
+from dataclasses import dataclass
+
+
 @dataclass
 class PracticeMetadataDTO:
     id_practice: int
