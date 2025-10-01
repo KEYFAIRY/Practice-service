@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import Optional
+
 
 @dataclass
-class MusicalError:
+class MusicalErrorDTO:
     id: int
     min_sec: str
     note_played: str

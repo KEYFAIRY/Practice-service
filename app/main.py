@@ -30,6 +30,7 @@ from app.presentation.middleware.exception_handler import (
 from app.presentation.api.v1.practice import router as get_practices
 from app.presentation.api.v1.report import router as get_report
 from app.presentation.api.v1.postural_error import router as get_postural_errors
+from app.presentation.api.v1.musical_error import router as get_musical_errors
 
 
 # Configure logging
@@ -105,6 +106,7 @@ def create_application() -> FastAPI:
     app.include_router(get_practices)
     app.include_router(get_report)
     app.include_router(get_postural_errors)
+    app.include_router(get_musical_errors)
 
     return app
 

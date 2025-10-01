@@ -2,6 +2,7 @@ from fastapi import Request
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 from app.core.exceptions import (
+    MusicalErrorNotFoundException,
     PosturalErrorNotFoundException,
     PracticeNotFoundException,
     ReportNotFoundException,
@@ -42,6 +43,10 @@ async def report_not_found_exception_handler(request: Request, exc: ReportNotFou
     return JSONResponse(status_code=exc.code, content=build_response(exc))
 
 async def postural_error_not_found_exception_handler(request: Request, exc: PosturalErrorNotFoundException):
+    logger.warning(str(exc))
+    return JSONResponse(status_code=exc.code, content=build_response(exc))
+
+async def musical_error_not_found_exception_handler(request: Request, exc: MusicalErrorNotFoundException):
     logger.warning(str(exc))
     return JSONResponse(status_code=exc.code, content=build_response(exc))
 

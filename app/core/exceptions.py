@@ -48,6 +48,11 @@ class PosturalErrorNotFoundException(PracticeServiceException):
     def __init__(self, practice_id: int, message: str = "Postural error not found"):
         super().__init__(message, 404, error_code="POSTURAL_ERROR_NOT_FOUND", details={"practice_id": practice_id})
 
+class MusicalErrorNotFoundException(PracticeServiceException):
+    """Musical error not found"""
+    def __init__(self, practice_id: int, message: str = "Musical error not found"):
+        super().__init__(message, 404, error_code="MUSICAL_ERROR_NOT_FOUND", details={"practice_id": practice_id})
+        
 class DatabaseConnectionException(PracticeServiceException):
     """Database connection error"""
     def __init__(self, message: str = "Database connection error"):
