@@ -26,7 +26,7 @@ class MySQLPracticeRepository(IPracticeRepository):
             try:
                 stmt = (
                     select(PracticeModel)
-                    .options(joinedload(PracticeModel.scale))  # join con Scale
+                    .options(joinedload(PracticeModel.scale))
                     .where(PracticeModel.id_student == uid)
                     .order_by(PracticeModel.practice_datetime.desc())
                     .limit(PRACTICES_PAGE_LIMIT)
@@ -38,7 +38,7 @@ class MySQLPracticeRepository(IPracticeRepository):
                         .where(PracticeModel.id == last_id)
                         .scalar_subquery()
                     )
-                    stmt = stmt.where(PracticeModel.practice_datetime > subq)
+                    stmt = stmt.where(PracticeModel.practice_datetime < subq)
 
                 result = await session.execute(stmt)
                 models = result.scalars().all()
