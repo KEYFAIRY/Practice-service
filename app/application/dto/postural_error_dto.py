@@ -1,9 +1,8 @@
 from dataclasses import dataclass
 
+
 @dataclass
-class PosturalError:
-    id: int
+class PosturalErrorDTO:
     min_sec_init: str
     min_sec_end: str
     explication: str
-    id_practice: int

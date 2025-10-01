@@ -8,6 +8,7 @@ from app.core.config import settings
 from app.core.logging import configure_logging
 from app.core.exceptions import (
     DatabaseConnectionException,
+    PosturalErrorNotFoundException,
     PracticeNotFoundException,
     PracticeServiceException,
     ReportNotFoundException,
@@ -17,6 +18,7 @@ from app.core.exceptions import (
 from app.infrastructure.database import mongo_connection, mysql_connection
 from app.presentation.middleware.exception_handler import (
     database_connection_exception_handler,
+    postural_error_not_found_exception_handler,
     practice_not_found_exception_handler,
     practice_service_exception_handler,
     report_not_found_exception_handler,
@@ -27,6 +29,7 @@ from app.presentation.middleware.exception_handler import (
 )
 from app.presentation.api.v1.practice import router as get_practices
 from app.presentation.api.v1.report import router as get_report
+from app.presentation.api.v1.postural_error import router as get_postural_errors
 
 
 # Configure logging
@@ -82,6 +85,7 @@ def create_application() -> FastAPI:
     app.add_exception_handler(UserNotFoundException, user_not_found_exception_handler)
     app.add_exception_handler(PracticeNotFoundException, practice_not_found_exception_handler)
     app.add_exception_handler(ReportNotFoundException, report_not_found_exception_handler)
+    app.add_exception_handler(PosturalErrorNotFoundException, postural_error_not_found_exception_handler)
     app.add_exception_handler(DatabaseConnectionException, database_connection_exception_handler)
     app.add_exception_handler(ValidationException, validation_exception_handler)
     app.add_exception_handler(RequestValidationError, request_validation_exception_handler)
@@ -100,6 +104,7 @@ def create_application() -> FastAPI:
     # Routers
     app.include_router(get_practices)
     app.include_router(get_report)
+    app.include_router(get_postural_errors)
 
     return app
 

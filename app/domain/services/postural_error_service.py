@@ -1,6 +1,6 @@
+import logging
 from typing import List
 
-from flask import logging
 from app.domain.entities.postural_error import PosturalError
 from app.domain.repositories.postural_error_repo import IPosturalErrorRepository
 

@@ -43,6 +43,10 @@ class UserNotFoundException(PracticeServiceException):
             details={"user_id": user_id}
         )
 
+class PosturalErrorNotFoundException(PracticeServiceException):
+    """Postural error not found"""
+    def __init__(self, practice_id: int, message: str = "Postural error not found"):
+        super().__init__(message, 404, error_code="POSTURAL_ERROR_NOT_FOUND", details={"practice_id": practice_id})
 
 class DatabaseConnectionException(PracticeServiceException):
     """Database connection error"""
