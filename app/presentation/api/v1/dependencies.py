@@ -9,7 +9,7 @@ from app.domain.services.practice_service import PracticeService
 from app.domain.services.report_service import ReportService
 from app.infrastructure.repositories.local_report_repo import LocalReportRepository
 from app.infrastructure.repositories.mongo_metadata_repo import MongoMetadataRepository
-from app.infrastructure.repositories.mysql_musical_error_repo import MySQLPosturalErrorRepository
+from app.infrastructure.repositories.mysql_postural_error_repo import MySQLPosturalErrorRepository
 from app.infrastructure.repositories.mysql_practice_repo import MySQLPracticeRepository
 
 
