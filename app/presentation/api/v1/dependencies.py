@@ -10,7 +10,9 @@ from app.domain.services.postural_error_service import PosturalErrorService
 from app.domain.services.practice_metadata_service import PracticeMetadataService
 from app.domain.services.practice_service import PracticeService
 from app.domain.services.report_service import ReportService
+from app.domain.services.video_service import VideoService
 from app.infrastructure.repositories.local_report_repo import LocalReportRepository
+from app.infrastructure.repositories.local_video_repo import LocalVideoRepository
 from app.infrastructure.repositories.mongo_metadata_repo import MongoMetadataRepository
 from app.infrastructure.repositories.mysql_musical_error_repo import MySQLMusicalErrorRepository
 from app.infrastructure.repositories.mysql_postural_error_repo import MySQLPosturalErrorRepository
@@ -43,6 +45,11 @@ def get_musical_error_repository() -> MySQLMusicalErrorRepository:
     """Get instance of MySQLMusicalErrorRepository."""
     return MySQLMusicalErrorRepository()
 
+@lru_cache()
+def get_video_repository() -> LocalVideoRepository:
+    """Get instance of LocalVideoRepository."""
+    return LocalVideoRepository()
+
 # Services
 @lru_cache()
 def get_practice_service() -> PracticeService:
@@ -74,6 +81,11 @@ def get_practice_metadata_service() -> PracticeMetadataService:
     """Get instance of PracticeMetadataService."""
     return PracticeMetadataService(metadata_repository=get_mongo_metadata_repository())
 
+@lru_cache()
+def get_video_service() -> VideoService:
+    """Get instance of VideoService."""
+    return VideoService(video_repository=get_video_repository())
+
 
 # Use Cases
 @lru_cache()
@@ -102,7 +114,10 @@ def get_musical_errors_use_case() -> GetMusicalErrorsUseCase:
 @lru_cache()
 def get_finish_practice_use_case() -> FinishPracticeUseCase:
     """Get instance of FinishPracticeUseCase."""
-    return FinishPracticeUseCase(practice_metadata_service=get_practice_metadata_service())
+    return FinishPracticeUseCase(
+        practice_metadata_service=get_practice_metadata_service(),
+        video_service=get_video_service()
+        )
     
 # FastAPI Dependencies
 def get_user_practices_use_case_dependency() -> GetUserPracticesUseCase:

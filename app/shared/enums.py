@@ -23,3 +23,17 @@ class PracticeState(str, Enum):
     ANALYZED = "ANALYZED" # Audio/video analysis done, report pending
     IN_PROGRESS = "IN_PROGRESS" # Audio/video analysis or report in progress
     FINISHED = "FINISHED" # Audio/video analysis and report done and user deleted video in local
+    
+class Figure(Enum):
+    BLANCA = 0.5
+    NEGRA = 1
+    CORCHEA = 2
+
+    @classmethod
+    def to_str(cls, value):
+        mapping = {
+            cls.BLANCA.value: "Blanca",
+            cls.NEGRA.value: "Negra",
+            cls.CORCHEA.value: "Corchea",
+        }
+        return mapping.get(value, "Desconocido")

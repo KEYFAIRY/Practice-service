@@ -5,7 +5,7 @@ from typing import List, Optional
 from app.application.dto.practice_dto import PracticeDTO
 from app.domain.services.practice_metadata_service import PracticeMetadataService
 from app.domain.services.practice_service import PracticeService
-from app.shared.enums import PracticeState
+from app.shared.enums import Figure, PracticeState
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,11 @@ class GetUserPracticesUseCase:
         self.practice_service = practice_service
         self.practice_metadata_service = practice_metadata_service
 
-    async def execute(self, uid: str, last_id: Optional[int] = None) -> List[PracticeDTO]:
+    async def execute(self, uid: str, last_id: Optional[int] = None, limit: Optional[int] = None) -> List[PracticeDTO]:
         """Retrieve practices for a user within the specified date range."""
         
-        logger.info(f"Fetching practices for user {uid} with last_id={last_id}")
-        practices = await self.practice_service.get_practices_for_user(uid, last_id=last_id)
+        logger.info(f"Fetching practices for user {uid} with last_id={last_id} and limit={limit}")
+        practices = await self.practice_service.get_practices_for_user(uid, last_id, limit)
         
         # 2. Get practices info from MongoDB
         logger.info(f"Fetching metadata for {len(practices)} practices")
@@ -49,6 +49,10 @@ class GetUserPracticesUseCase:
         return [PracticeDTO(id=p.id,
                             scale=p.scale,
                             scale_type=p.scale_type,
+                            duration=p.duration,
+                            bpm=p.bpm,
+                            figure=Figure.to_str(p.figure),
+                            octaves=p.octaves,
                             date=p.date,
                             time=p.time,
                             state=p.state,

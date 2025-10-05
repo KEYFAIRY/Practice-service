@@ -5,6 +5,5 @@ from dataclasses import dataclass
 class MusicalErrorDTO:
     id: int
     min_sec: str
-    note_played: str
-    note_correct: str
+    missed_note: str
     id_practice: int

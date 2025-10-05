@@ -1,6 +1,6 @@
 import logging
 from fastapi import APIRouter, Depends, status, Query
-from typing import List
+from typing import List, Optional
 from datetime import date
 
 from app.application.use_cases.get_user_practices_use_case import GetUserPracticesUseCase
@@ -22,14 +22,15 @@ router = APIRouter(prefix="/practice", tags=["Practices"])
 )
 async def get_user_practices(
     uid: str,
-    last_id: int = Query(None, description="ID of the last practice from previous page for pagination"),
+    last_id: Optional[int] = Query(None, description="ID of the last practice from previous page for pagination"),
+    limit: Optional[int] = Query(None, description="Maximum number of practices to return"),
     use_case: GetUserPracticesUseCase = Depends(get_user_practices_use_case_dependency)
 ):
     """Endpoint that retrieves practices for a user within a given date range."""
 
-    logger.info(f"Retrieving practices for user {uid} with last_id={last_id}")
+    logger.info(f"Retrieving practices for user {uid} with last_id={last_id} and limit {limit}")
 
-    practices_dto: List = await use_case.execute(uid=uid, last_id=last_id)
+    practices_dto: List = await use_case.execute(uid=uid, last_id=last_id, limit=limit)
 
     # DTOs → PracticeItem
     items = [
@@ -37,6 +38,10 @@ async def get_user_practices(
             practice_id=p.id,
             scale=p.scale,
             scale_type=p.scale_type,
+            duration=p.duration,
+            bpm=p.bpm,
+            figure=p.figure,
+            octaves=p.octaves,
             date=p.date,
             time=p.time,
             state=p.state,

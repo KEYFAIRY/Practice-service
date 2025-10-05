@@ -11,7 +11,7 @@ class LocalReportRepository(IReportRepository):
     """Concrete implementation of IReportRepository that retrieves PDFs from local file system."""
 
     def __init__(self, base_dir: str | None = None):
-        self.base_dir = base_dir or os.getenv("CONTAINER_REPORT_PATH", "/app/storage")
+        self.base_dir = base_dir or os.getenv("CONTAINER_PATH", "/app/storage")
         os.makedirs(self.base_dir, exist_ok=True)
 
     async def get_pdf(self, uid: str, practice_id: int) -> bytes:

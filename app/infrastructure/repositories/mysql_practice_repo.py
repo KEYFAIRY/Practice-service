@@ -21,7 +21,13 @@ class MySQLPracticeRepository(IPracticeRepository):
         self,
         uid: str,
         last_id: Optional[int] = None,
+        limit: Optional[int] = None,
     ) -> List[Practice]:
+        
+        query_limit = limit if limit is not None else PRACTICES_PAGE_LIMIT
+                
+        logger.info(f"Repository: uid={uid}, last_id={last_id}, limit={limit}, effective_limit={query_limit}")
+
         async with mysql_connection.get_async_session() as session:
             try:
                 stmt = (
@@ -29,7 +35,7 @@ class MySQLPracticeRepository(IPracticeRepository):
                     .options(joinedload(PracticeModel.scale))
                     .where(PracticeModel.id_student == uid)
                     .order_by(PracticeModel.practice_datetime.desc())
-                    .limit(PRACTICES_PAGE_LIMIT)
+                    .limit(query_limit)
                 )
 
                 if last_id:
@@ -56,6 +62,10 @@ class MySQLPracticeRepository(IPracticeRepository):
             id=model.id,
             scale=model.scale.name if model.scale else "",
             scale_type=model.scale.scale_type if model.scale else "",
+            duration=model.duration,
+            bpm=model.bpm,
+            figure=model.figure,
+            octaves=model.octaves,
             date=dt.strftime("%Y-%m-%d"),
             time=dt.strftime("%H:%M:%S"),
             state="",           # lo completa el use case

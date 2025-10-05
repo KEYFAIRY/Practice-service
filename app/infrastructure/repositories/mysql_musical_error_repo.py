@@ -36,11 +36,10 @@ class MySQLMusicalErrorRepository(IMusicalErrorRepository):
             logger.error(f"MySQL error fetching musical errors for practice_id={practice_id}: {e}", exc_info=True)
             raise DatabaseConnectionException(f"Error fetching musical errors: {str(e)}")
 
-    def _model_to_entity(self, model: MusicalError) -> MusicalError:
+    def _model_to_entity(self, model: MusicalErrorModel) -> MusicalError:
         return MusicalError(
             id=model.id,
             min_sec=model.min_sec,
-            note_played=model.note_played,
-            note_correct=model.note_correct,
+            missed_note=model.missed_note,
             id_practice=model.id_practice
         )

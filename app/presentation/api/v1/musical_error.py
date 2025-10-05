@@ -32,8 +32,7 @@ async def get_musical_errors(
     items = [
         MusicalErrorItem(
             min_sec=e.min_sec,
-            note_played=e.note_played,
-            note_correct=e.note_correct,
+            missed_note=e.missed_note,
         )
         for e in errors_dto
     ]

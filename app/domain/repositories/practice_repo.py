@@ -8,5 +8,5 @@ from app.domain.entities.practice import Practice
 class IPracticeRepository(ABC):
     
     @abstractmethod
-    async def get_practices_for_user(self, uid: str, last_id: Optional[int] = None) -> List[Practice]:
+    async def get_practices_for_user(self, uid: str, last_id: Optional[int] = None, limit: Optional[int] = None) -> List[Practice]:
         pass

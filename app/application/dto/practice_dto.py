@@ -6,6 +6,10 @@ class PracticeDTO:
     id: int
     scale: str
     scale_type: str
+    duration: int
+    bpm: int
+    figure: str
+    octaves: int
     date: str
     time: str
     state: str

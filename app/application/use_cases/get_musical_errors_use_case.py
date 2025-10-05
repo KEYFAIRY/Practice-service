@@ -13,7 +13,6 @@ class GetMusicalErrorsUseCase:
         return [MusicalErrorDTO(
             id=error.id,
             min_sec=error.min_sec,
-            note_played=error.note_played,
-            note_correct=error.note_correct,
+            missed_note=error.missed_note,
             id_practice=error.id_practice
         ) for error in musical_errors]
