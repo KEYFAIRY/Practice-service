@@ -8,7 +8,7 @@ class Practice:
     scale_type: str
     duration: int
     bpm: int
-    figure: int
+    figure: float
     octaves: int
     date: str
     time: str
