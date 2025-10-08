@@ -23,15 +23,19 @@ class MusicalErrorResponse(BaseModel):
                 "errors": [
                     {
                         "min_sec": "00:12",
-                        "missed_note": "C#",
+                        "note_played": "C#",
+                        "note_correct": "F#"
                     },
                     {
                         "min_sec": "00:24",
-                        "missed_note": "F",
+                        "note_played": "F",
+                        "note_correct": "A"
+                    },
                     },
                     {
                         "min_sec": "00:36",
-                        "missed_note": "G",
+                        "note_played": "G",
+                        "note_correct": "B"
                     }
                 ]
             }
