@@ -1,5 +1,5 @@
 import logging
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, Path, HTTPException
 from typing import List, Optional
 from datetime import date
 
@@ -30,7 +30,7 @@ async def get_user_practices(
 
     logger.info(f"Retrieving practices for user {uid} with last_id={last_id} and limit {limit}")
 
-    practices_dto: List = await use_case.execute(uid=uid, last_id=last_id, limit=limit)
+    practices_dto: List = await use_case.get_all(uid=uid, last_id=last_id, limit=limit)
 
     # DTOs → PracticeItem
     items = [
@@ -59,4 +59,47 @@ async def get_user_practices(
     return StandardResponse.success(
         data=response,
         message=f"Retrieved {len(items)} practices for user {uid}"
+    )
+
+
+@router.get(
+    "/{uid}/{practice_id}",
+    response_model=StandardResponse[PracticeItem],
+    status_code=status.HTTP_200_OK,
+    summary="Get specific practice",
+    description="Retrieve a specific practice by ID for a user with current state"
+)
+async def get_practice_by_id(
+    uid: str = Path(..., description="User unique identifier"),
+    practice_id: int = Path(..., description="Practice identifier"),
+    use_case: GetUserPracticesUseCase = Depends(get_user_practices_use_case_dependency)
+):
+    """Endpoint that retrieves a specific practice by ID with current state from database."""
+    
+    logger.info(f"Retrieving practice {practice_id} for user {uid}")
+    
+    # Obtener la práctica específica usando el use case existente
+    practice = await use_case.get_one(uid=uid, practice_id=practice_id)
+        
+    # Convertir DTO a PracticeItem
+    item = PracticeItem(
+        practice_id=practice.id,
+        scale=practice.scale,
+        scale_type=practice.scale_type,
+        duration=practice.duration,
+        bpm=practice.bpm,
+        figure=practice.figure,
+        octaves=practice.octaves,
+        date=practice.date,
+        time=practice.time,
+        state=practice.state,
+        local_video_url=practice.local_video_url,
+        pdf_url=practice.pdf_url,
+    )
+        
+    logger.info(f"Successfully retrieved practice {practice_id} with state '{practice.state}' for user {uid}")
+        
+    return StandardResponse.success(
+        data=item,
+        message=f"Practice {practice_id} retrieved successfully"
     )

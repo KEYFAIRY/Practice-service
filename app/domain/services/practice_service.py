@@ -16,3 +16,7 @@ class PracticeService:
     async def get_practices_for_user(self, uid: str, last_id: Optional[int] = None, limit: Optional[int] = None) -> List[Practice]:
         logger.debug(f"Service fetching practices for uid={uid}, last_id={last_id}, limit={limit}")
         return await self.practice_repository.get_practices_for_user(uid, last_id, limit)
+    
+    async def get_practice_by_id(self, uid: str, practice_id: int) -> Practice:
+        logger.debug(f"Service getting practice for uid={uid} and practice id={practice_id}")
+        return await self.practice_repository.get_practice_by_id(uid, practice_id)

@@ -52,12 +52,11 @@ class MusicalErrorNotFoundException(PracticeServiceException):
     """Musical error not found"""
     def __init__(self, practice_id: int, message: str = "Musical error not found"):
         super().__init__(message, 404, error_code="MUSICAL_ERROR_NOT_FOUND", details={"practice_id": practice_id})
-        
+
 class DatabaseConnectionException(PracticeServiceException):
     """Database connection error"""
     def __init__(self, message: str = "Database connection error"):
         super().__init__(message, 500, error_code="DB_CONNECTION_ERROR")
-
 
 class ValidationException(PracticeServiceException):
     """Data validation error"""

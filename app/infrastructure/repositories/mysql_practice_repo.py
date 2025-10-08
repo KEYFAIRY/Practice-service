@@ -4,7 +4,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import joinedload
 
-from app.core.exceptions import DatabaseConnectionException
+from app.core.exceptions import DatabaseConnectionException, PracticeNotFoundException
 from app.domain.entities.practice import Practice
 from app.domain.repositories.practice_repo import IPracticeRepository
 from app.infrastructure.database.models.practice_model import PracticeModel
@@ -55,6 +55,39 @@ class MySQLPracticeRepository(IPracticeRepository):
             except SQLAlchemyError as e:
                 logger.error(f"MySQL error fetching practices for uid={uid}: {e}", exc_info=True)
                 raise DatabaseConnectionException(f"Error fetching practices: {str(e)}")
+            
+    async def get_practice_by_id(
+        self,
+        uid: str,
+        practice_id: int
+    ) -> Practice:
+                        
+        logger.info(f"Repository: uid={uid}, practice_id={practice_id}")
+
+        async with mysql_connection.get_async_session() as session:
+            try:
+                stmt = (
+                    select(PracticeModel)
+                    .options(joinedload(PracticeModel.scale))
+                    .where(
+                        PracticeModel.id == practice_id,
+                        PracticeModel.id_student == uid
+                    )
+                )
+
+                result = await session.execute(stmt)
+                model = result.scalar_one_or_none()
+
+                if model is None:
+                    logger.warning(f"Practice {practice_id} not found for user {uid}")
+                    raise PracticeNotFoundException(f"Practice {practice_id} not found")
+
+                logger.info(f"Successfully fetched practice {practice_id} for uid={uid}")
+                return self._model_to_entity(model)
+
+            except SQLAlchemyError as e:
+                logger.error(f"MySQL error fetching practice {practice_id} for uid={uid}: {e}", exc_info=True)
+                raise DatabaseConnectionException(f"Error fetching practice {practice_id}: {str(e)}")
 
     def _model_to_entity(self, model: PracticeModel) -> Practice:
         dt = model.practice_datetime
