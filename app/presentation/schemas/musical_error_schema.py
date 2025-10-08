@@ -6,7 +6,8 @@ class MusicalErrorItem(BaseModel):
     """Single musical error entry"""
 
     min_sec: str = Field(..., description="Timestamp of the error (mm:ss)", example="00:12")
-    missed_note: str = Field(..., description="Correct note that should have been played", example="D")
+    note_played: str = Field(..., description="Note that was played", example="D")
+    note_correct: str = Field(..., description="Correct note that should have been played", example="D")
 
 
 class MusicalErrorResponse(BaseModel):
