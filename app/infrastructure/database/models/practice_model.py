@@ -14,7 +14,7 @@ class PracticeModel(Base):
     duration = Column(Numeric, nullable=False)
     bpm = Column(Numeric, nullable=False)
     figure = Column(Numeric(4, 2), nullable=False)
-    octaves = Column(Numeric, nullable=False)
+    octaves = Column(Numeric, nullable=False) 
     id_student = Column(String(128), nullable=False)
 
     id_scale = Column(Integer, ForeignKey("Scale.id"), nullable=False)

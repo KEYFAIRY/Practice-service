@@ -10,6 +10,8 @@ class PracticeDTO:
     bpm: int
     figure: str
     octaves: int
+    num_postural_errors: int
+    num_musical_errors: int
     date: str
     time: str
     state: str

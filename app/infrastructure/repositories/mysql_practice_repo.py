@@ -99,6 +99,8 @@ class MySQLPracticeRepository(IPracticeRepository):
             bpm=model.bpm,
             figure=model.figure,
             octaves=model.octaves,
+            num_postural_errors=model.num_postural_errors,
+            num_musical_errors=model.num_musical_errors,
             date=dt.strftime("%Y-%m-%d"),
             time=dt.strftime("%H:%M:%S"),
             state="",           # lo completa el use case

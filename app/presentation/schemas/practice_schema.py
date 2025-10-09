@@ -10,6 +10,8 @@ class PracticeItem(BaseModel):
     bpm: int = Field(..., description="Beats per minute", example=120)
     figure: str = Field(..., description="Figure practiced", example="Negra")
     octaves: int = Field(..., description="Number of octaves practiced", example=2)
+    num_postural_errors: int = Field(None, description="Number of postural errors", example=0)
+    num_musical_errors: int = Field(None, description="Number of musical errors", example=1)
     date: str = Field(..., description="Date of the practice", example="2023-10-01")
     time: str = Field(..., description="Time of the practice", example="15:30:00")
     state: str = Field(..., description="Status of the practice", example="completed")
