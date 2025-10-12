@@ -89,7 +89,7 @@ class MySQLPracticeRepository(IPracticeRepository):
                 logger.error(f"MySQL error fetching practice {practice_id} for uid={uid}: {e}", exc_info=True)
                 raise DatabaseConnectionException(f"Error fetching practice {practice_id}: {str(e)}")
 
-    def _model_to_entity(self, model: PracticeModel) -> Practice:
+    def _model_to_entity(self, model: PracticeModel) -> Practice: 
         dt = model.practice_datetime
         return Practice(
             id=model.id,

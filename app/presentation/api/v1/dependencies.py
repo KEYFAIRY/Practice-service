@@ -48,7 +48,7 @@ def get_musical_error_repository() -> MySQLMusicalErrorRepository:
 @lru_cache()
 def get_video_repository() -> LocalVideoRepository:
     """Get instance of LocalVideoRepository."""
-    return LocalVideoRepository()
+    return LocalVideoRepository() 
 
 # Services
 @lru_cache()

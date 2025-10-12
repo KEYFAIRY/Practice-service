@@ -4,7 +4,7 @@ from app.domain.entities.practice_metadata import PracticeMetadata
 
 
 class IMetaDataRepository(ABC):
-    """Abstract base class for metadata repository."""
+    """Abstract base class for metadata repository.""" 
     
     @abstractmethod
     async def get_practice_metadata(self, uid: str, practice_id: int) -> PracticeMetadata:

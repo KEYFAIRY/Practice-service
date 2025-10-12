@@ -1,5 +1,6 @@
 import os
 import logging
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,9 @@ class DatabaseConnection:
                     echo=False,
                     pool_pre_ping=True,
                     pool_recycle=3600,
+                    pool_size=10,      # número máximo de conexiones en el pool
+                    max_overflow=5,    # conexiones extra si se saturan
+                    pool_timeout=30,   # Timeout para obtener conexión del pool
                 )
                 self.async_session_factory = async_sessionmaker(
                     self.async_engine,
@@ -42,6 +46,19 @@ class DatabaseConnection:
                 logger.error("Error creating async database engine", exc_info=True)
                 raise RuntimeError(f"Failed to create database connection: {e}")
 
+    async def verify_connection(self):
+        if not self.async_engine:
+            raise RuntimeError("Engine not initialized. Call init_engine() first.")
+        
+        try:
+            async with self.async_engine.connect() as conn:
+                result = await conn.execute(text("SELECT 1"))
+                result.fetchone()
+            logger.info(f"✅ MySQL connection verified: {self.mysql_host}:{self.mysql_port}/{self.mysql_db}")
+        except Exception as e:
+            logger.error(f"❌ MySQL connection verification failed: {e}")
+            raise
+        
     def get_async_session(self) -> AsyncSession:
         """Gets a new async session."""
         if not self.async_session_factory:

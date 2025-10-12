@@ -26,7 +26,7 @@ async def get_user_practices(
     limit: Optional[int] = Query(None, description="Maximum number of practices to return"),
     use_case: GetUserPracticesUseCase = Depends(get_user_practices_use_case_dependency)
 ):
-    """Endpoint that retrieves practices for a user within a given date range."""
+    """Endpoint that retrieves practices for a user within a given date range.""" 
 
     logger.info(f"Retrieving practices for user {uid} with last_id={last_id} and limit {limit}")
 
